@@ -2,10 +2,21 @@ import express from "express";
 
 // Importing Routes";
 import Routes from "./routes/index.routes.js";
+import { connectDB } from "./utils/db/db.js";
 
 const port = 4000;
 
+//db connection
+connectDB("mongodb://localhost:27017");
+
 const app = express();
+
+//middlewares
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
 
 //Routes
 app.use("/api/v1", Routes);
