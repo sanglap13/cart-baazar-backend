@@ -3,6 +3,7 @@ import express from "express";
 // Importing Routes";
 import Routes from "./routes/index.routes.js";
 import { connectDB } from "./utils/db/db.js";
+import { errorMiddleware } from "./middlewares/errorHandler.js";
 
 const port = 4000;
 
@@ -20,6 +21,9 @@ app.get("/", (req, res) => {
 
 //Routes
 app.use("/api/v1", Routes);
+
+//Error Handler
+app.use(errorMiddleware);
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
