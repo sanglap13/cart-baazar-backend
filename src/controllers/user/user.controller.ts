@@ -52,7 +52,7 @@ export const getUser = TryCatchWrapper(async (req, res, next) => {
   const id = req.params.id;
   const user = await UserModel.findById(id);
 
-  if (!user) return next(new ErrorHandler("Invalid Id", 400));
+  if (!user) return next(new ErrorHandler("Golu Beta, Invalid Id", 400));
 
   return res.status(200).json({
     success: true,
@@ -64,7 +64,7 @@ export const deleteUser = TryCatchWrapper(async (req, res, next) => {
   const id = req.params.id;
   const user = await UserModel.findById(id);
 
-  if (!user) return next(new ErrorHandler("Invalid Id", 400));
+  if (!user) return next(new ErrorHandler("Golu Beta, Invalid Id", 400));
 
   await user.deleteOne();
 
