@@ -22,6 +22,7 @@ app.get("/", (req, res) => {
 //Routes
 app.use("/api/v1", Routes);
 
+app.use("/uploads", express.static("uploads"));
 //Error Handler
 app.use(errorMiddleware);
 
