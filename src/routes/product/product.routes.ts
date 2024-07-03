@@ -1,7 +1,15 @@
 import express from "express";
 
 import { adminOnlyAccess } from "../../middlewares/auth.js";
-import { newProduct } from "../../controllers/product/product.controller.js";
+import {
+  deleteProduct,
+  getAdminProducts,
+  getAllCategories,
+  getSingleProduct,
+  getlatestProducts,
+  newProduct,
+  updateProduct,
+} from "../../controllers/product/product.controller.js";
 import { singleUpload } from "../../middlewares/multer.js";
 
 const router = express.Router();
@@ -13,19 +21,19 @@ router.post("/new", adminOnlyAccess, singleUpload, newProduct);
 // router.get("/all", getAllProducts);
 
 //To get last 10 Products  - /api/v1/product/latest
-// router.get("/latest", getlatestProducts);
+router.get("/latest", getlatestProducts);
 
 //To get all unique Categories  - /api/v1/product/categories
-// router.get("/categories", getAllCategories);
+router.get("/categories", getAllCategories);
 
 //To get all Products   - /api/v1/product/admin-products
-// router.get("/admin-products", adminOnly, getAdminProducts);
+router.get("/admin-products", getAdminProducts);
 
 // To get, update, delete Product
-// router
-//   .route("/:id")
-//   .get(getSingleProduct)
-//   .put(adminOnly, singleUpload, updateProduct)
-//   .delete(adminOnly, deleteProduct);
+router
+  .route("/:id")
+  .get(getSingleProduct)
+  .put(singleUpload, updateProduct)
+  .delete(deleteProduct);
 
 export default router;
