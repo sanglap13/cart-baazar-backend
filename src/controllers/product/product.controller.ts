@@ -11,6 +11,7 @@ import ErrorHandler from "../../utils/services/errorHandler.js";
 
 import { faker } from "@faker-js/faker";
 import { myCache } from "../../app.js";
+import { invalidateCache } from "../../utils/services/invalidateCache.js";
 
 // Revalidate on New,Update,Delete Product & on New Order
 export const getlatestProducts = TryCatchWrapper(async (req, res, next) => {
@@ -106,7 +107,7 @@ export const newProduct = TryCatchWrapper(
       photo: photo?.path,
     });
 
-    // invalidateCache({ product: true, admin: true });
+    invalidateCache({ product: true, admin: true });
 
     return res.status(201).json({
       success: true,
@@ -137,11 +138,11 @@ export const updateProduct = TryCatchWrapper(async (req, res, next) => {
 
   await product.save();
 
-  // invalidateCache({
-  //   product: true,
-  //   productId: String(product._id),
-  //   admin: true,
-  // });
+  invalidateCache({
+    product: true,
+    productId: String(product._id),
+    admin: true,
+  });
 
   return res.status(200).json({
     success: true,
@@ -160,11 +161,11 @@ export const deleteProduct = TryCatchWrapper(async (req, res, next) => {
 
   await product.deleteOne();
 
-  // invalidateCache({
-  //   product: true,
-  //   productId: String(product._id),
-  //   admin: true,
-  // });
+  invalidateCache({
+    product: true,
+    productId: String(product._id),
+    admin: true,
+  });
 
   return res.status(200).json({
     success: true,
