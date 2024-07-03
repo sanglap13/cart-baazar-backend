@@ -5,6 +5,9 @@ import { Request } from "express";
 import { TryCatchWrapper } from "../../middlewares/errorHandler.js";
 import ErrorHandler from "../../utils/services/errorHandler.js";
 import { invalidateCache } from "../../utils/services/invalidateCache.js";
+import { INewOrderRequestBody } from "../../@types/interfaces/order.interface.js";
+import OrderModel from "../../models/order.model.js";
+import { reduceStock } from "../../utils/services/reduceStock.js";
 
 //     const key = `my-orders-${user}`;
 
@@ -62,48 +65,49 @@ import { invalidateCache } from "../../utils/services/invalidateCache.js";
 //     });
 //   });
 
-export const newOrder = TryCatchWrapper(async (req, res, next) => {
-  //   async (req: Request<{}, {}, TNewOrderRequestBody>, res, next) => {
-  const {
-    shippingInfo,
-    orderItems,
-    user,
-    subtotal,
-    tax,
-    shippingCharges,
-    discount,
-    total,
-  } = req.body;
+export const newOrder = TryCatchWrapper(
+  async (req: Request<{}, {}, INewOrderRequestBody>, res, next) => {
+    const {
+      shippingInfo,
+      orderItems,
+      user,
+      subtotal,
+      tax,
+      shippingCharges,
+      discount,
+      total,
+    } = req.body;
 
-  if (!shippingInfo || !orderItems || !user || !subtotal || !tax || !total)
-    return next(new ErrorHandler("Please Enter All Fields", 400));
+    if (!shippingInfo || !orderItems || !user || !subtotal || !tax || !total)
+      return next(new ErrorHandler("Please Enter All Fields", 400));
 
-  //   const order = await Order.create({
-  //     shippingInfo,
-  //     orderItems,
-  //     user,
-  //     subtotal,
-  //     tax,
-  //     shippingCharges,
-  //     discount,
-  //     total,
-  //   });
+    const order = await OrderModel.create({
+      shippingInfo,
+      orderItems,
+      user,
+      subtotal,
+      tax,
+      shippingCharges,
+      discount,
+      total,
+    });
 
-  //   await reduceStock(orderItems);
+    await reduceStock(orderItems);
 
-  //   await invalidateCache({
-  //     product: true,
-  //     order: true,
-  //     admin: true,
-  //     userId: user,
-  //     productId: order.orderItems.map((i) => String(i.productId)),
-  //   });
+    await invalidateCache({
+      product: true,
+      order: true,
+      admin: true,
+      userId: user,
+      productId: order.orderItems.map((i) => String(i.productId)),
+    });
 
-  return res.status(201).json({
-    success: true,
-    message: "Order Placed Successfully",
-  });
-});
+    return res.status(201).json({
+      success: true,
+      message: "Order Placed Successfully",
+    });
+  }
+);
 
 //   export const processOrder = TryCatch(async (req, res, next) => {
 //     const { id } = req.params;
