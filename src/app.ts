@@ -1,14 +1,17 @@
 import express from "express";
+import { connectDB } from "./utils/db/db.js";
+import { errorMiddleware } from "./middlewares/errorHandler.js";
+import NodeCache from "node-cache";
 
 // Importing Routes";
 import Routes from "./routes/index.routes.js";
-import { connectDB } from "./utils/db/db.js";
-import { errorMiddleware } from "./middlewares/errorHandler.js";
 
 const port = 4000;
 
 //db connection
 connectDB("mongodb://localhost:27017");
+
+export const myCache = new NodeCache();
 
 const app = express();
 
@@ -23,6 +26,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1", Routes);
 
 app.use("/uploads", express.static("uploads"));
+
 //Error Handler
 app.use(errorMiddleware);
 
