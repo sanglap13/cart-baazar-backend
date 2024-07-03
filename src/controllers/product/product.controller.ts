@@ -9,6 +9,8 @@ import { TryCatchWrapper } from "../../middlewares/errorHandler.js";
 import ProductModel from "../../models/product.model.js";
 import ErrorHandler from "../../utils/services/errorHandler.js";
 
+import { faker } from "@faker-js/faker";
+
 // Revalidate on New,Update,Delete Product & on New Order
 export const getlatestProducts = TryCatchWrapper(async (req, res, next) => {
   let products;
@@ -219,3 +221,41 @@ export const getAllProducts = TryCatchWrapper(
     });
   }
 );
+
+// const generateRandomProducts = async (count: number = 10) => {
+//   const products = [];
+
+//   for (let i = 0; i < count; i++) {
+//     const product = {
+//       name: faker.commerce.productName(),
+//       photo: "uploads/d9f12a9f-0faa-448e-a20b-613361c35c28.webp",
+//       price: faker.commerce.price({ min: 1500, max: 80000, dec: 0 }),
+//       stock: faker.commerce.price({ min: 0, max: 100, dec: 0 }),
+//       category: faker.commerce.department(),
+//       createdAt: new Date(faker.date.past()),
+//       updatedAt: new Date(faker.date.recent()),
+//       __v: 0,
+//     };
+
+//     products.push(product);
+//   }
+
+//   await ProductModel.create(products);
+
+//   console.log({ succecss: true });
+// };
+
+// // generateRandomProducts(40);
+
+// const deleteRandomsProducts = async (count: number = 10) => {
+//   const products = await ProductModel.find({}).skip(2);
+
+//   for (let i = 0; i < products.length; i++) {
+//     const product = products[i];
+//     await product.deleteOne();
+//   }
+
+//   console.log({ succecss: true });
+// };
+
+// // deleteRandomsProducts(40);
