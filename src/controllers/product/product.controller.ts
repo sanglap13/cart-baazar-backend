@@ -1,13 +1,13 @@
-// Revalidate on New,Update,Delete Product & on New Order
-// export const getlatestProducts = TryCatch(async (req, res, next) => {
-//   let products;
-
 import { Request } from "express";
+import { rm } from "fs";
+import {
+  IBaseQuery,
+  TSearchRequestQuery,
+} from "../../@types/controller.types.js";
+import { INewProductRequestBody } from "../../@types/interfaces/product.interface.js";
 import { TryCatchWrapper } from "../../middlewares/errorHandler.js";
 import ProductModel from "../../models/product.model.js";
 import ErrorHandler from "../../utils/services/errorHandler.js";
-import { INewProductRequestBody } from "../../@types/interfaces/product.interface.js";
-import { rm } from "fs";
 
 // Revalidate on New,Update,Delete Product & on New Order
 export const getlatestProducts = TryCatchWrapper(async (req, res, next) => {
@@ -174,48 +174,48 @@ export const deleteProduct = TryCatchWrapper(async (req, res, next) => {
   });
 });
 
-//   export const getAllProducts = TryCatch(
-//     async (req: Request<{}, {}, {}, SearchRequestQuery>, res, next) => {
-//       const { search, sort, category, price } = req.query;
+export const getAllProducts = TryCatchWrapper(
+  async (req: Request<{}, {}, {}, TSearchRequestQuery>, res, next) => {
+    const { search, sort, category, price } = req.query;
 
-//       const page = Number(req.query.page) || 1;
-//       // 1,2,3,4,5,6,7,8
-//       // 9,10,11,12,13,14,15,16
-//       // 17,18,19,20,21,22,23,24
-//       const limit = Number(process.env.PRODUCT_PER_PAGE) || 8;
-//       const skip = (page - 1) * limit;
+    const page = Number(req.query.page) || 1;
+    // 1,2,3,4,5,6,7,8
+    // 9,10,11,12,13,14,15,16
+    // 17,18,19,20,21,22,23,24
+    const limit = Number(process.env.PRODUCT_PER_PAGE) || 8;
+    const skip = (page - 1) * limit;
 
-//       const baseQuery: BaseQuery = {};
+    const baseQuery: IBaseQuery = {};
 
-//       if (search)
-//         baseQuery.name = {
-//           $regex: search,
-//           $options: "i",
-//         };
+    if (search)
+      baseQuery.name = {
+        $regex: search,
+        $options: "i",
+      };
 
-//       if (price)
-//         baseQuery.price = {
-//           $lte: Number(price),
-//         };
+    if (price)
+      baseQuery.price = {
+        $lte: Number(price),
+      };
 
-//       if (category) baseQuery.category = category;
+    if (category) baseQuery.category = category;
 
-//       const productsPromise = Product.find(baseQuery)
-//         .sort(sort && { price: sort === "asc" ? 1 : -1 })
-//         .limit(limit)
-//         .skip(skip);
+    const productsPromise = ProductModel.find(baseQuery)
+      .sort(sort && { price: sort === "asc" ? 1 : -1 })
+      .limit(limit)
+      .skip(skip);
 
-//       const [products, filteredOnlyProduct] = await Promise.all([
-//         productsPromise,
-//         Product.find(baseQuery),
-//       ]);
+    const [products, filteredOnlyProduct] = await Promise.all([
+      productsPromise,
+      ProductModel.find(baseQuery),
+    ]);
 
-//       const totalPage = Math.ceil(filteredOnlyProduct.length / limit);
+    const totalPage = Math.ceil(filteredOnlyProduct.length / limit);
 
-//       return res.status(200).json({
-//         success: true,
-//         products,
-//         totalPage,
-//       });
-//     }
-//   );
+    return res.status(200).json({
+      success: true,
+      products,
+      totalPage,
+    });
+  }
+);
