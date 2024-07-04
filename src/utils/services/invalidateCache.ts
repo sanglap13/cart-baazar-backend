@@ -44,12 +44,18 @@ export const invalidateCache = async ({
 
     //     await redis.del(ordersKeys);
   }
-  //   if (admin) {
-  //     await redis.del([
-  //       "admin-stats",
-  //       "admin-pie-charts",
-  //       "admin-bar-charts",
-  //       "admin-line-charts",
-  //     ]);
-  //   }
+  if (admin) {
+    myCache.del([
+      "admin-stats",
+      "admin-pie-charts",
+      "admin-bar-charts",
+      "admin-line-charts",
+    ]);
+    // await redis.del([
+    //   "admin-stats",
+    //   "admin-pie-charts",
+    //   "admin-bar-charts",
+    //   "admin-line-charts",
+    // ]);
+  }
 };
