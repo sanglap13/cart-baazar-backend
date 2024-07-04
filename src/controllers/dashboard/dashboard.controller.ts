@@ -192,6 +192,7 @@ export const getDashboardStats = TryCatchWrapper(async (req, res, next) => {
     };
 
     // await redis.setex(key, redisTTL, JSON.stringify(stats));
+    myCache.set(key, JSON.stringify(stats));
   }
 
   return res.status(200).json({
@@ -204,9 +205,10 @@ export const getPieCharts = TryCatchWrapper(async (req, res, next) => {
   let charts;
   const key = "admin-pie-charts";
 
-  charts = await redis.get(key);
+  //   charts = await redis.get(key);
 
-  if (charts) charts = JSON.parse(charts);
+  //   if (charts) charts = JSON.parse(charts);
+  if (myCache.has(key)) charts = JSON.parse(myCache.get(key) as string);
   else {
     const allOrderPromise = OrderModel.find({}).select([
       "total",
@@ -306,7 +308,8 @@ export const getPieCharts = TryCatchWrapper(async (req, res, next) => {
       adminCustomer,
     };
 
-    await redis.setex(key, redisTTL, JSON.stringify(charts));
+    // await redis.setex(key, redisTTL, JSON.stringify(charts));
+    myCache.set(key, JSON.stringify(charts));
   }
 
   return res.status(200).json({
@@ -319,9 +322,10 @@ export const getBarCharts = TryCatchWrapper(async (req, res, next) => {
   let charts;
   const key = "admin-bar-charts";
 
-  charts = await redis.get(key);
+  //   charts = await redis.get(key);
 
-  if (charts) charts = JSON.parse(charts);
+  //   if (charts) charts = JSON.parse(charts);
+  if (myCache.has(key)) charts = JSON.parse(myCache.get(key) as string);
   else {
     const today = new Date();
 
@@ -368,7 +372,8 @@ export const getBarCharts = TryCatchWrapper(async (req, res, next) => {
       orders: ordersCounts,
     };
 
-    await redis.setex(key, redisTTL, JSON.stringify(charts));
+    // await redis.setex(key, redisTTL, JSON.stringify(charts));
+    myCache.set(key, JSON.stringify(charts));
   }
 
   return res.status(200).json({
@@ -381,9 +386,10 @@ export const getLineCharts = TryCatchWrapper(async (req, res, next) => {
   let charts;
   const key = "admin-line-charts";
 
-  charts = await redis.get(key);
+  //   charts = await redis.get(key);
 
-  if (charts) charts = JSON.parse(charts);
+  //   if (charts) charts = JSON.parse(charts);
+  if (myCache.has(key)) charts = JSON.parse(myCache.get(key) as string);
   else {
     const today = new Date();
 
@@ -425,7 +431,8 @@ export const getLineCharts = TryCatchWrapper(async (req, res, next) => {
       revenue,
     };
 
-    await redis.setex(key, redisTTL, JSON.stringify(charts));
+    // await redis.setex(key, redisTTL, JSON.stringify(charts));
+    myCache.set(key, JSON.stringify(charts));
   }
 
   return res.status(200).json({
