@@ -5,6 +5,7 @@ import NodeCache from "node-cache";
 import { config } from "dotenv";
 import morgan from "morgan";
 import Stripe from "stripe";
+import cors from "cors";
 
 // Importing Routes";
 import Routes from "./routes/index.routes.js";
@@ -28,6 +29,14 @@ const app = express();
 //middlewares
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(cors());
+// app.use(
+//   cors({
+//     origin: [process.env.CLIENT_URL!],
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     credentials: true,
+//   })
+// );
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
