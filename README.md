@@ -40,10 +40,10 @@ This is the backend repository for Cart Baazar, an innovative e-commerce platfor
    PRODUCT_PER_PAGE=`8 or any`
 ```
 
-3.
+Fill each field with your respective information
+
+3. Build backend
 
 ```bash
    npm run build
 ```
-
-Fill each field with your respective information
